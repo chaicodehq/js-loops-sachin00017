@@ -34,5 +34,27 @@
  *   // => { count: 2, totalDuration: 300 }
  */
 export function buildPlaylist(songs, maxDuration) {
-  // Your code here
+  if (!Array.isArray(songs) || maxDuration <= 0 || typeof maxDuration !== 'number') {
+    return { count: 0, totalDuration: 0 };
+  }
+  let i = 0;
+  let counter = 0
+  let songsDurations = 0;
+  while (i < songs.length) {
+    if (Number.isNaN(songs[i]) || typeof songs[i] !== 'number' || songs[i] <= 0) {
+      i++; continue;
+    }
+
+    if (songs[i] + songsDurations > maxDuration) {
+      break;
+    } else {
+      songsDurations += songs[i];
+      counter++;
+      i++;
+    }
+  }
+
+  return { count: counter, totalDuration: songsDurations };
+
+
 }

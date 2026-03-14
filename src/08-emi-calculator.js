@@ -41,6 +41,46 @@
  *   // First month interest = 500, EMI = 400 < 500, INFINITE LOOP!
  *   // => { months: -1, totalPaid: -1, totalInterest: -1 }
  */
+
 export function calculateEMI(principal, monthlyRate, emi) {
-  // Your code here
+  // Validation
+  if (typeof principal !== 'number' || typeof monthlyRate !== 'number' || typeof emi !== 'number') {
+    return { months: -1, totalPaid: -1, totalInterest: -1 };
+  }
+  if (principal <= 0 || monthlyRate <= 0 || emi <= 0) {
+    return { months: -1, totalPaid: -1, totalInterest: -1 };
+  }
+
+  // Infinite loop 
+  if (emi <= principal * monthlyRate) {
+    return { months: -1, totalPaid: -1, totalInterest: -1 };
+  }
+
+  let totalInterest = 0;
+  let months = 0;
+  let totalPaid = 0;
+  let remaining = principal;
+
+  while (remaining > 0) {
+    // 1. Calculate monthly interest
+    let interest = remaining * monthlyRate;
+    totalInterest += interest;
+
+    // 2. Add interest to balance
+    remaining += interest;
+
+    let payment = 0;
+    if (remaining <= emi) {
+      payment = remaining;
+      remaining = 0;
+    } else {
+      payment = emi;
+      remaining -= emi;
+    }
+
+    totalPaid += payment;
+    months++;
+  }
+
+  return { months: months, totalPaid: Number(totalPaid.toFixed(2)), totalInterest: Number(totalInterest.toFixed(2)) };
 }
